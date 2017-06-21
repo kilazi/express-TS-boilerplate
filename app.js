@@ -13,7 +13,7 @@ module.exports =
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
-/******/ 			id: moduleId,
+/******/ 			id: moduleId, 
 /******/ 			loaded: false
 /******/ 		};
 /******/

@@ -134,9 +134,10 @@ export class APIHandler {
 
         });
     }
-
+ 
     initRoute(endpoint: apiEndpoint) {
         this.globalService.app[endpoint.type](endpoint.address, (req, res, next) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
             console.log(endpoint.address + ' ' + endpoint.type.toUpperCase() + ' Request: ', req.body);
             this.requestHandler.handle(req).subscribe(handledReq => {
                 // console.log('handleReq', handledReq);
