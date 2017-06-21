@@ -1,0 +1,32 @@
+[
+    {
+        "title": "data",
+        "value": [
+            {
+                "title": "Case Acceptance %",
+                "value": "70%",
+                "type": "green"
+            },
+            {
+                "title": "Hyg Wage % H Prod",
+                "value": "33%",
+                "type": "blue"
+            }
+        ]
+    },
+    {
+        "title": "custom",
+        "value": [
+            {
+                "title": "#Sq. Ft",
+                "value": "5000",
+                "type": "blue"
+            },
+            {
+                "title": "#Trx Rm",
+                "value": "13",
+                "type": "blue"
+            }
+        ]
+    }
+]
