@@ -71,7 +71,7 @@ export class APIHandler {
                 address: '/v1/devices/meta',
                 type: 'get',
                 class: this.devices,
-                method: 'getDevicesMeta'
+                method: 'getDevicesMETA'
             },
             {
                 address: '/v1/devices/add',
@@ -139,11 +139,12 @@ export class APIHandler {
         this.globalService.app[endpoint.type](endpoint.address, (req, res, next) => {
             res.setHeader('Access-Control-Allow-Origin', '*');
             console.log(endpoint.address + ' ' + endpoint.type.toUpperCase() + ' Request: ', req.body);
+            if(!endpoint.class || !endpoint.class[endpoint.method]) this.returnError(res, 'Endpoint not found.', endpoint.address, endpoint.type, 404);
             this.requestHandler.handle(req).subscribe(handledReq => {
                 // console.log('handleReq', handledReq);
                 let user = req.user;
                 if (user && user['user_id'])
-                    endpoint.class[endpoint.method](handledReq, user['user_id']).subscribe((resAPI: APIResponse) => {
+                    endpoint.class[endpoint.method](handledReq, user['user_id']['id']).subscribe((resAPI: APIResponse) => {
                         console.log(endpoint.address + ' ' + endpoint.type.toUpperCase() + ' Response 1: ', resAPI);
                         res.json(resAPI);
                     }, err => this.returnError(res, err, endpoint.address, endpoint.type))
