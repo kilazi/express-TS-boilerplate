@@ -13,6 +13,7 @@ export class DevicesAPI {
     }
 
     getDevicesList(data, user_id) {
+        console.log('getDeviceList', data, user_id);
         return new Observable(observer => {
             this.CRUD.read('devices', { user_id: user_id }).subscribe(devices => {
                 observer.next(devices);
@@ -33,7 +34,7 @@ export class DevicesAPI {
 
         })
     }
-
+ 
     addDevice(data, user_id) {
         
         data['device']['user_id'] = user_id;

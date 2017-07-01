@@ -5,6 +5,7 @@ import { APIResponse } from './api.service';
 import { Observable } from 'rxjs';
 import { RequestHandler } from './request.handler';
 import { AuthAPI } from './auth.api';
+import { SafeHeavenAPI } from './safe-heaven.api';
 import { JWTService } from './../common/jwt.service';
 import { DBClient } from './../db/db.client';
 import { GlobalService } from '../common/global.service';
@@ -31,6 +32,7 @@ export class APIHandler {
     private apiEndpoints: [apiEndpoint];
     private auth: AuthAPI;
     private devices: DevicesAPI;
+    private safeHeaven: SafeHeavenAPI;
     private user: UserAPI;
     constructor(
         private globalService: GlobalService,
@@ -41,6 +43,7 @@ export class APIHandler {
         this.auth = new AuthAPI(JWT, CRUD);
         this.devices = new DevicesAPI(JWT, CRUD);
         this.user = new UserAPI(JWT, CRUD);
+        this.safeHeaven = new SafeHeavenAPI(CRUD);
         this.requestHandler = new RequestHandler();
         this.apiEndpoints = [
             {
@@ -120,7 +123,31 @@ export class APIHandler {
                 type: 'put',
                 class: this.user,
                 method: 'updateUser'
-            }
+            },
+            {
+                address: '/v1/safeheaven/get',
+                type: 'get',
+                class: this.safeHeaven,
+                method: 'getSafeHeavens'
+            },
+            {
+                address: '/v1/safeheaven/update',
+                type: 'put',
+                class: this.safeHeaven,
+                method: 'updateSafeHeaven'
+            },
+            {
+                address: '/v1/safeheaven/create',
+                type: 'post',
+                class: this.safeHeaven,
+                method: 'createSafeHeaven'
+            },
+            {
+                address: '/v1/safeheaven/remove',
+                type: 'post',
+                class: this.safeHeaven,
+                method: 'removeSafeHeaven'
+            },
         ]
     }
     routes() {
@@ -144,15 +171,19 @@ export class APIHandler {
                 // console.log('handleReq', handledReq);
                 let user = req.user;
                 if (user && user['user_id'])
-                    endpoint.class[endpoint.method](handledReq, user['user_id']['id']).subscribe((resAPI: APIResponse) => {
+                {
+                    console.log('got user', user);
+                    endpoint.class[endpoint.method](handledReq, user['user_id']).subscribe((resAPI: APIResponse) => {
                         console.log(endpoint.address + ' ' + endpoint.type.toUpperCase() + ' Response 1: ', resAPI);
                         res.json(resAPI);
                     }, err => this.returnError(res, err, endpoint.address, endpoint.type))
-                else 
+                } else {
+                    console.log('no user');
                     endpoint.class[endpoint.method](handledReq).subscribe((resAPI: APIResponse) => {
                         console.log(endpoint.address + ' ' + endpoint.type.toUpperCase() + ' Response 2: ', resAPI);
                         res.json(resAPI);
                     }, err => this.returnError(res, err, endpoint.address, endpoint.type, 401))
+                }
             }, err => this.returnError(res, err));
         })
     }

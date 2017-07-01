@@ -23,11 +23,9 @@ export class UserAPI {
         })
     }
 
-    updateFamily(data, user_id) {
-        let device_id = data['device_id'];
-        let share_to = data['share_to'];
+    updateFamily(data, user_id) {       
         return new Observable(observer => {
-            this.CRUD.update('devices', { user_id: user_id }, { family: data }).subscribe((devices: any) => {
+            this.CRUD.update('users', { user_id: user_id }, { family: data }).subscribe((devices: any) => {
                 observer.next(devices);
             }, err => {
                 observer.error(err);
